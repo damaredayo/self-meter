@@ -1,12 +1,9 @@
-use std::fs::File;
+use std::collections::{HashMap, VecDeque};
 use std::time::{Duration, SystemTime};
-use std::collections::{VecDeque, HashMap};
 
 use num_cpus;
 
-use {Meter, Error, Pid};
-use error::IoStatError;
-
+use crate::{Error, Meter, Pid};
 
 impl Meter {
     /// Create a new meter with scan_interval
@@ -22,7 +19,7 @@ impl Meter {
     pub fn new(scan_interval: Duration) -> Result<Meter, Error> {
         Meter::_new(scan_interval)
     }
-    #[cfg(target_os="linux")]
+    #[cfg(target_os = "linux")]
     fn _new(scan_interval: Duration) -> Result<Meter, Error> {
         let io_file = File::open("/proc/self/io").map_err(IoStatError::Io)?;
         Ok(Meter {
@@ -41,7 +38,7 @@ impl Meter {
         })
     }
 
-    #[cfg(not(target_os="linux"))]
+    #[cfg(not(target_os = "linux"))]
     fn _new(scan_interval: Duration) -> Result<Meter, Error> {
         Ok(Meter {
             scan_interval: scan_interval,
@@ -72,7 +69,7 @@ impl Meter {
         }
     }
     /// Add current thread using `track_thread`, returns thread id
-    #[cfg(target_os="linux")]
+    #[cfg(target_os = "linux")]
     pub fn track_current_thread(&mut self, name: &str) -> Pid {
         use libc::{syscall, SYS_gettid};
         let tid = unsafe { syscall(SYS_gettid) } as Pid;
@@ -82,13 +79,13 @@ impl Meter {
     /// Add current thread using `track_thread`, returns thread id
     ///
     /// Non-linux is not supported yet (no-op)
-    #[cfg(not(target_os="linux"))]
+    #[cfg(not(target_os = "linux"))]
     pub fn track_current_thread(&mut self, _name: &str) -> Pid {
         // TODO(tailhook) OS X and windows
         0
     }
     /// Remove current thread using `untrack_thread`
-    #[cfg(target_os="linux")]
+    #[cfg(target_os = "linux")]
     pub fn untrack_current_thread(&mut self) {
         use libc::{syscall, SYS_gettid};
         let tid = unsafe { syscall(SYS_gettid) } as Pid;
@@ -97,7 +94,7 @@ impl Meter {
     /// Remove current thread using `untrack_thread`
     ///
     /// Non-linux is not supported yet (no-op)
-    #[cfg(not(target_os="linux"))]
+    #[cfg(not(target_os = "linux"))]
     pub fn untrack_current_thread(&mut self) {
         // TODO
     }

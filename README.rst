@@ -4,6 +4,8 @@ Self-Meter
 :Status: beta
 :Documentation: https://docs.rs/self-meter/
 
+This is a fork of the `self-meter` crate, I hope to add more features, streamline and update the code, as well as add Windows support.
+
 A tiny library to measure resource usage of the process it's used in.
 Currently it measures:
 

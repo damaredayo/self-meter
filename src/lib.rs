@@ -39,19 +39,20 @@ extern crate libc;
 extern crate num_cpus;
 extern crate serde;
 
-#[macro_use] extern crate quick_error;
-#[macro_use] extern crate serde_derive;
+#[macro_use]
+extern crate quick_error;
+#[macro_use]
+extern crate serde_derive;
 
-use std::fs::File;
-use std::time::{SystemTime, Instant, Duration};
-use std::collections::{VecDeque, HashMap};
+use std::collections::{HashMap, VecDeque};
+use std::time::{Duration, Instant, SystemTime};
 
-mod meter;
-mod scan;
-mod error;
-mod report;
-mod serialize;
 mod debug;
+mod error;
+mod meter;
+mod report;
+mod scan;
+mod serialize;
 
 pub use error::Error;
 pub use report::ThreadReportIter;
@@ -87,7 +88,6 @@ struct Snapshot {
     threads: HashMap<Pid, ThreadInfo>,
 }
 
-
 /// CPU usage of a single thread
 #[derive(Debug)]
 pub struct ThreadUsage {
@@ -104,22 +104,22 @@ pub struct ThreadUsage {
 #[derive(Debug, Serialize)]
 pub struct Report {
     /// Timestamp
-    #[serde(serialize_with="serialize::serialize_timestamp")]
+    #[serde(serialize_with = "serialize::serialize_timestamp")]
     pub timestamp: SystemTime,
 
     /// The interval time this data has averaged over in milliseconds
-    #[serde(serialize_with="serialize::serialize_duration")]
+    #[serde(serialize_with = "serialize::serialize_duration")]
     pub duration: Duration,
 
     /// Start time
-    #[serde(serialize_with="serialize::serialize_timestamp")]
+    #[serde(serialize_with = "serialize::serialize_timestamp")]
     pub start_time: SystemTime,
 
     /// The uptime of the system
     ///
     /// Note this value can be smaller than time since `start_time`
     /// because this value doesn't include time when system was sleeping
-    #[serde(serialize_with="serialize::serialize_duration")]
+    #[serde(serialize_with = "serialize::serialize_duration")]
     pub system_uptime: Duration,
     /// Whole system CPU usage. 100% is all cores
     pub global_cpu_usage: f32,
@@ -204,7 +204,7 @@ pub struct Meter {
 
     /// This file is always open because if we drop privileges and then
     /// try to open a file we can't open it back again
-    #[cfg(target_os="linux")]
+    #[cfg(target_os = "linux")]
     io_file: File,
 
     memory_rss_peak: u64,
