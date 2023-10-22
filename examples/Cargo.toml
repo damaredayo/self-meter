@@ -1,0 +1,16 @@
+[package]
+name = "self-meter-examples"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+self-meter = { path = "../" }
+serde_json = "1.0.64"
+
+[[bin]]
+name = "self-meter-json"
+path = "json.rs"
+
+[[bin]]
+name = "self-meter-simple"
+path = "simple.rs"
