@@ -4,6 +4,17 @@ use std::time::{Instant, SystemTime};
 use crate::error::StatusError;
 use crate::{Error, Meter, Pid, Snapshot, ThreadInfo};
 
+#[cfg(target_os = "linux")]
+use std::{
+    fmt::Write,
+    fs::File,
+    io::{Read, Seek, SeekFrom},
+    num::ParseIntError,
+};
+
+#[cfg(target_os = "linux")]
+use crate::error::{IoStatError, StatError, UptimeError};
+
 impl Meter {
     /// Scan system for metrics
     ///
@@ -117,7 +128,7 @@ impl Meter {
         } == 0
         {
             return Err(Error::Stat(StatError::BadFormat));
-        }   
+        }
 
         process.user_time = filetime_to_unix!(user_time_t);
 

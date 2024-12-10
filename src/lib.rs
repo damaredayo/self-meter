@@ -45,6 +45,7 @@ extern crate quick_error;
 extern crate serde_derive;
 
 use std::collections::{HashMap, VecDeque};
+use std::fs::File;
 use std::time::{Duration, Instant, SystemTime};
 
 mod debug;

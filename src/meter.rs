@@ -21,6 +21,10 @@ impl Meter {
     }
     #[cfg(target_os = "linux")]
     fn _new(scan_interval: Duration) -> Result<Meter, Error> {
+        use std::fs::File;
+
+        use crate::error::IoStatError;
+
         let io_file = File::open("/proc/self/io").map_err(IoStatError::Io)?;
         Ok(Meter {
             scan_interval: scan_interval,
